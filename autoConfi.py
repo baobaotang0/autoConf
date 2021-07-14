@@ -59,6 +59,7 @@ def system_is_raspberry():
 
 
 if __name__ == '__main__':
+    """请用sudo安装"""
     if system_is_raspberry():
         # 链接手柄：树莓派关闭蓝牙增强重传模式
         print("Xbox controller")
@@ -78,9 +79,11 @@ if __name__ == '__main__':
         # 计算模块打开usb
         print("usb")
         add_configuration("/boot/config.txt", "dtoverlay=dwc2,dr_mode=host", "a+")
-        # 一键安装所有pip依赖库
-        print("numpy")
-        add_configuration("dependence.txt", "numpy", "a+")
-        print("pysdl2")
-        add_configuration("dependence.txt", "PySDL2", "a+")
-        os.system("pip install -r dependence.txt")
+        # 设置os缓存buffer永久
+        print("buffer")
+        add_configuration("/etc/sysctl.conf","net.core.rmem_max=104857600\nnet.core.rmem_default=104857600\nnet.core.wmem_max=104857600\nnet.core.wmem_default=104857600", "a+")
+        os.system("sysctl -w net.core.rmem_max=104857600")
+        os.system("sysctl -w net.core.rmem_default=104857600")
+        os.system("sysctl -w net.core.wmem_max=104857600")
+        os.system("sysctl -w net.core.wmem_default=104857600")
+        os.system("reboot")
